@@ -2,7 +2,7 @@ import {Text} from 'react-native';
 import React from 'react';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-top-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 
 import Home from './Screens/Home';
@@ -13,36 +13,59 @@ import Foundation from 'react-native-vector-icons/Foundation';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Chat from './Screens/Chat';
 
-const RootStack = createStackNavigator();
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+
+const RootStack = createMaterialTopTabNavigator();
 const App = () => {
   return (
     <NavigationContainer>
       <RootStack.Navigator
-        initialRouteName="BottomTabs"
-        screenOptions={{
-          headerTitleAlign: 'center',
-          headerStyle: {
-            backgroundColor: 'black',
+        screenOptions={({route}) => ({
+          tabBarIcon: ({focused, size, color}) => {
+            let IconName;
+            color = focused ? 'gray' : 'black';
+            size = focused ? 25 : 20;
+
+            if (route.name == 'Home') {
+              IconName = 'greenhouse';
+              return (
+                <MaterialCommunityIcons
+                  name={IconName}
+                  color={color}
+                  size={size}
+                />
+              );
+            } else if (route.name == 'Chat') {
+              IconName = 'chat';
+              return (
+                <MaterialCommunityIcons
+                  name={IconName}
+                  color={color}
+                  size={size}
+                />
+              );
+            } else if (route.name == 'Settings') {
+              IconName = 'gear';
+              return <FontAwesome name={IconName} color={color} size={size} />;
+            }
           },
-          headerTintColor: '#bbb',
-          headerTitleStyle: {
-            fontSize: 20,
-            fontWeight: 'normal',
+
+          tabBarShowIcon: false, // show or hide icon
+
+          // Styles
+          tabBarLabelStyle: {
+            fontSize: 15,
+            fontWeight: '900',
+            color: 'black',
           },
-        }}>
-        <RootStack.Screen
-          name="BottomTabs"
-          options={{
-            header: () => null,
-            title: 'Home',
-          }}
-          component={BottomTabs}
-        />
+        })}>
+        <RootStack.Screen name="Home" component={Home} />
+        <RootStack.Screen name="Chat" component={Chat} />
+        <RootStack.Screen name="Settings" component={Settings} />
       </RootStack.Navigator>
     </NavigationContainer>
   );
 };
-
 export default App;
 
 const BottomTab = createBottomTabNavigator();
